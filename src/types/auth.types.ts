@@ -9,6 +9,6 @@ export interface ICreateUser extends IAuth {
   first_name: string
   last_name: string
   email: string
-  repeat_password: string
+  repeat_password?: string
   role: ERole
 }

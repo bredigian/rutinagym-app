@@ -1,11 +1,12 @@
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native"
 import { IAuth, ICreateUser } from "src/types/auth.types"
+import { signin, signup } from "src/services/auth.service"
 import { useController, useForm } from "react-hook-form"
 
 import { EColors } from "src/themes/colors"
+import { ERole } from "src/types/users.types"
 import Input from "src/components/input"
 import { Link } from "expo-router"
-import { signin } from "src/services/auth.service"
 import { useMutation } from "@tanstack/react-query"
 
 export function SigninForm() {
@@ -110,9 +111,27 @@ export function SignupForm() {
     getValues,
   } = useForm<ICreateUser>()
 
-  const onSubmit = async (values: IAuth) => {
+  const onSubmit = async (values: ICreateUser) => {
     try {
-      await signin(values)
+      const FORMATTED_VALUES: ICreateUser = {
+        ...values,
+        first_name: values.first_name
+          .charAt(0)
+          .toUpperCase()
+          .concat(values.first_name.substring(1).toLowerCase())
+          .trim(),
+        last_name: values.last_name
+          .charAt(0)
+          .toUpperCase()
+          .concat(values.last_name.substring(1).toLowerCase())
+          .trim(),
+        username: values.username.toLowerCase().trim(),
+        email: values.email.toLowerCase(),
+        role: ERole.USER,
+        repeat_password: undefined,
+      }
+
+      await signup(FORMATTED_VALUES)
     } catch (error) {
       if (error instanceof Error)
         Alert.alert("Ocurrió un error.", error.message)
@@ -173,9 +192,12 @@ export function SignupForm() {
           control,
           rules: {
             required: { value: true, message: "El usuario es requerido." },
+            pattern: {
+              value: /^\S+$/,
+              message: "El usuario no puede contener espacios.",
+            },
           },
         })}
-        secure
         error={errors?.username?.message}
       />
       <Input
@@ -197,6 +219,9 @@ export function SignupForm() {
           control,
           rules: {
             required: { value: true, message: "La contraseña es requerida." },
+            validate: (value) =>
+              value === getValues("password") ||
+              "Las contraseñas no coinciden.",
           },
         })}
         secure
