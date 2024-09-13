@@ -3,12 +3,10 @@ import { Image, StyleSheet, Text, View } from "react-native"
 import { EColors } from "../themes/colors"
 import { SafeAreaView } from "react-native-safe-area-context"
 import SigninForm from "src/sections/auth"
-import { StatusBar } from "expo-status-bar"
 
 export default function Authentication() {
   return (
     <SafeAreaView style={container}>
-      <StatusBar backgroundColor="white" animated />
       <View style={hero}>
         <Image
           source={require("assets/logo.png")}

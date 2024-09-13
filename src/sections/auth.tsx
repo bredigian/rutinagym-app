@@ -4,18 +4,31 @@ import { EColors } from "src/themes/colors"
 import { IAuth } from "src/types/auth.types"
 import Input from "src/components/input"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { signin } from "src/services/auth.service"
 import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
 
 export default function SigninForm() {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
+    getValues,
   } = useForm<IAuth>()
 
   const onSubmit = async (values: IAuth) => {
-    Alert.alert("Enviando formulario...")
+    try {
+      await signin(values)
+    } catch (error) {
+      if (error instanceof Error)
+        Alert.alert("Ocurrió un error.", error.message)
+    }
   }
+
+  const { mutate } = useMutation({
+    mutationKey: ["signin_mutation", getValues("username")],
+    mutationFn: onSubmit,
+  })
 
   return (
     <SafeAreaView style={form}>
@@ -35,7 +48,8 @@ export default function SigninForm() {
           error={errors?.password?.message}
         />
         <Pressable
-          onPress={handleSubmit(onSubmit)}
+          onPress={handleSubmit(mutate)}
+          disabled={isSubmitting}
           style={({ pressed }) => [
             {
               backgroundColor:
