@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, View } from "react-native"
 
 import { EColors } from "../themes/colors"
 import { SafeAreaView } from "react-native-safe-area-context"
-import SigninForm from "src/sections/auth"
+import { SigninForm } from "src/sections/auth"
 
 export default function Authentication() {
   return (

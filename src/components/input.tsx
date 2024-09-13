@@ -1,33 +1,18 @@
-import { Control, UseControllerProps, useController } from "react-hook-form"
+import { IAuth, ICreateUser } from "src/types/auth.types"
 import { StyleSheet, Text, TextInput, View } from "react-native"
 
 import { EColors } from "src/themes/colors"
-import { IAuth } from "src/types/auth.types"
+import { UseControllerReturn } from "react-hook-form"
 
 type TProps = {
-  name: keyof IAuth
   label: string
-  control: Control<IAuth>
+  controller: UseControllerReturn<IAuth> | UseControllerReturn<ICreateUser>
   secure?: boolean
   error?: string
 }
 
-export default function Input({ label, name, control, secure, error }: TProps) {
-  const { field } = useController<IAuth>({
-    control,
-    name,
-    defaultValue: "",
-    rules: {
-      required: {
-        value: true,
-        message: "El campo es requerido.",
-      },
-      minLength: {
-        value: 10,
-        message: "Debe tener al menos 10 caract.",
-      },
-    },
-  })
+export default function Input({ label, controller, secure, error }: TProps) {
+  const { field } = controller
   return (
     <View style={container}>
       <View style={input_label_container}>
@@ -66,7 +51,7 @@ const { container, input_label_container, input_error, input_label, input } =
     },
     input: {
       backgroundColor: EColors.GRAY_200,
-      width: 290,
+      width: "100%",
       fontSize: 16,
       paddingHorizontal: 12,
       paddingVertical: 8,
