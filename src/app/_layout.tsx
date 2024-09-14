@@ -26,7 +26,6 @@ export default function RootLayout() {
   useEffect(() => {
     const validateSession = async () => {
       const token = await getItemAsync("session_token")
-      console.log(token)
       if (!token) return
 
       try {
