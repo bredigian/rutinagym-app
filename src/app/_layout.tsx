@@ -3,6 +3,7 @@ import { Slot, useRouter, useSegments } from "expo-router"
 import { deleteItemAsync, getItemAsync } from "expo-secure-store"
 
 import { TSignedToken } from "src/types/auth.types"
+import { isNetworkError } from "src/utils/messages"
 import { useAuthStore } from "src/store/auth.store"
 import { useEffect } from "react"
 import { useReactQueryDevTools } from "@dev-plugins/react-query"
@@ -32,7 +33,9 @@ export default function RootLayout() {
         const userdata: TSignedToken = await validateToken(token)
         authenticate(userdata)
       } catch (error) {
-        await deleteItemAsync("session_token")
+        if (error instanceof Error)
+          if (!isNetworkError(error.message))
+            await deleteItemAsync("session_token")
       }
     }
 
