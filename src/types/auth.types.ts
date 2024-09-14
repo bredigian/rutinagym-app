@@ -12,3 +12,12 @@ export interface ICreateUser extends IAuth {
   repeat_password?: string
   role: ERole
 }
+
+export type TSignedToken = {
+  sub: string
+  username: string
+  email: string
+  first_name: string
+  last_name: string
+  role: ERole
+}

@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native"
 
-import { EColors } from "../themes/colors"
+import { EColors } from "src/themes/colors"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { SigninForm } from "src/sections/auth"
 

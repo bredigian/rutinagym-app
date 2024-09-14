@@ -1,12 +1,15 @@
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native"
-import { IAuth, ICreateUser } from "src/types/auth.types"
+import { ERole, TUser } from "src/types/users.types"
+import { IAuth, ICreateUser, TSignedToken } from "src/types/auth.types"
 import { signin, signup } from "src/services/auth.service"
 import { useController, useForm } from "react-hook-form"
 
 import { EColors } from "src/themes/colors"
-import { ERole } from "src/types/users.types"
 import Input from "src/components/input"
 import { Link } from "expo-router"
+import { jwtDecode } from "jwt-decode"
+import { setItemAsync } from "expo-secure-store"
+import { useAuthStore } from "src/store/auth.store"
 import { useMutation } from "@tanstack/react-query"
 
 export function SigninForm() {
@@ -17,9 +20,15 @@ export function SigninForm() {
     getValues,
   } = useForm<IAuth>()
 
+  const { authenticate } = useAuthStore()
+
   const onSubmit = async (values: IAuth) => {
     try {
-      await signin(values)
+      const { access_token } = await signin(values)
+
+      await setItemAsync("session_token", access_token)
+      const userdata: TSignedToken = jwtDecode(access_token)
+      authenticate(userdata)
     } catch (error) {
       if (error instanceof Error)
         Alert.alert("Ocurrió un error.", error.message)
