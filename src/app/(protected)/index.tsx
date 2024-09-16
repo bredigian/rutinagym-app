@@ -1,9 +1,22 @@
-import { Text, View } from "react-native"
+import Hero from "src/components/hero"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { TUser } from "src/types/users.types"
+import { useAuthStore } from "src/store/auth.store"
 
 export default function Home() {
+  const { userdata } = useAuthStore()
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home</Text>
-    </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        padding: 32,
+        backgroundColor: "white",
+      }}
+    >
+      <Hero userdata={userdata as TUser} />
+    </SafeAreaView>
   )
 }
