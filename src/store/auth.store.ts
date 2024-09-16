@@ -7,6 +7,7 @@ interface IAuthStore {
   userdata: TUser | null
 
   authenticate: (value: TSignedToken) => void
+  signout: () => void
 }
 
 export const useAuthStore = create<IAuthStore>((set) => ({
@@ -16,4 +17,5 @@ export const useAuthStore = create<IAuthStore>((set) => ({
   authenticate: (userdata: TSignedToken) => {
     set({ isAuthenticated: true, userdata: { ...userdata, id: userdata.sub } })
   },
+  signout: () => set({ isAuthenticated: false, userdata: null }),
 }))
