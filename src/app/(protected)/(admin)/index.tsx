@@ -22,7 +22,7 @@ export default function AdminHome() {
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       <Text>Admin Home</Text>
-      <Pressable onPress={handleSignout}>
+      <Pressable disabled onPress={handleSignout}>
         <Text>Cerrar sesión</Text>
       </Pressable>
     </SafeAreaView>
